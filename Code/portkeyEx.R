@@ -130,12 +130,13 @@ max.loops = matrix(nrow = 1e3, ncol = 4)
 
 #install.packages('mcmcse')
 library(mcmcse)
+
 #install.packages("doParallel")
 #library(doParallel)
 #detectCores()
 #registerDoParallel(detectCores()-1)
 
-for(j in 1:1e3)
+for(j in 1:1e2)
 {
   for(i in 1:4) 
   {
