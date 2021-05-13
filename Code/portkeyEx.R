@@ -131,11 +131,11 @@ max.loops = matrix(nrow = 1e3, ncol = 4)
 #install.packages('mcmcse')
 library(mcmcse)
 
-#install.packages("doParallel")
-#library(doParallel)
-#detectCores()
-#registerDoParallel(detectCores()-1)
-
+##################### DISCLAIMER
+## The following loop takes enormous amount of time to converge.
+## It took me around 2 hours to get the output.
+## So, run at your own discretion.
+################################
 for(j in 1:1e2)
 {
   for(i in 1:4) 
@@ -151,7 +151,34 @@ for(j in 1:1e2)
 }
 
 
-par(mfrow = c(1,2))
+
+## ESTIMATES
+apply(ess.store, 2, mean)
+apply(ess.psec.store, 2, mean)
+apply(mean.loops, 2, mean)
+apply(max.loops, 2, mean)
+
+apply(ess.store, 2, sd)
+apply(ess.psec.store, 2, sd)
+apply(mean.loops, 2, sd)
+apply(max.loops, 2, sd)
+
+
+## MINIMUM ESS
+minESS(1)
+
+## WHEN TO STOP SAMPLING
+ess_temp = numeric(length = 1e2)
+for(j in 1:1e2)
+{
+  ess_temp[j] = ess(mcmc_sampler(N = 1.5*1e5, beta = 0.99, K, lam_mu, lam_var)$samples)
+}
+mean(ess_temp)
+sd(ess_temp)
+
+
+
+## PLOTSpar(mfrow = c(1,2))
 xax = seq(to = 1e5, length.out = 1e3) 
 plot(xax, tail(chains[[1]]$loops, n = 1e3), 
      pch = 8, col = "red", xlab = "Chain index", ylab = "#loops to converge")
@@ -207,15 +234,3 @@ for (i in 2:4)
 legend( x="topright", lty = c(1,2,3,4), cex = 0.75,
         legend=c("1","0.99", "0.90", "0.75"), title = expression(beta),
         col=cols )
-
-
-apply(ess.store, 2, mean)
-apply(ess.psec.store, 2, mean)
-apply(mean.loops, 2, mean)
-apply(max.loops, 2, mean)
-
-apply(ess.store, 2, sd)
-apply(ess.psec.store, 2, sd)
-apply(mean.loops, 2, sd)
-apply(max.loops, 2, sd)
-
